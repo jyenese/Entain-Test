@@ -22,6 +22,7 @@ type RacingClient interface {
 	ListRaces(ctx context.Context, in *ListRacesRequest, opts ...grpc.CallOption) (*ListRacesResponse, error)
 }
 
+
 type racingClient struct {
 	cc grpc.ClientConnInterface
 }
@@ -99,3 +100,4 @@ var Racing_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "racing/racing.proto",
 }
+
