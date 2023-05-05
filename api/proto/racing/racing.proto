@@ -13,7 +13,6 @@ service Racing {
   }
 }
 
-
 /* Requests/Responses */
 
 // Request for ListRaces call.
@@ -29,7 +28,7 @@ message ListRacesResponse {
 // Filter for listing races.
 message ListRacesRequestFilter {
   repeated int64 meeting_ids = 1;
-  // Returns races that have the value visable set to true.
+  // Filters races by whether or not they are visible.
   optional bool visible = 2;
 }
 
