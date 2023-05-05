@@ -18,6 +18,12 @@ service Racing {
 // Request for ListRaces call.
 message ListRacesRequest {
   ListRacesRequestFilter filter = 1;
+  OrderBy order = 2;
+}
+
+message OrderBy {
+  string field = 1;
+  string direction = 2;
 }
 
 // Response to ListRaces call.
