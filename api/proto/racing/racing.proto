@@ -26,6 +26,10 @@ message OrderBy {
   string direction = 2;
 }
 
+message RaceStatus {
+  string status = 1;
+}
+
 // Response to ListRaces call.
 message ListRacesResponse {
   repeated Race races = 1;
@@ -54,4 +58,8 @@ message Race {
   bool visible = 5;
   // AdvertisedStartTime is the time the race is advertised to run.
   google.protobuf.Timestamp advertised_start_time = 6;
+  // The status of the race, if it has been run or not.
+  RaceStatus status = 7;
+  
+
 }
