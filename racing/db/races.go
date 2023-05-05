@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
 	"strings"
 	"sync"
 	"time"
@@ -18,7 +19,7 @@ type RacesRepo interface {
 	Init() error
 
 	// List will return a list of races.
-	List(filter *racing.ListRacesRequestFilter) ([]*racing.Race, error)
+	List(filter *racing.ListRacesRequestFilter, orderBy *racing.OrderBy) ([]*racing.Race, error)
 }
 
 type racesRepo struct {
@@ -43,7 +44,7 @@ func (r *racesRepo) Init() error {
 	return err
 }
 
-func (r *racesRepo) List(filter *racing.ListRacesRequestFilter) ([]*racing.Race, error) {
+func (r *racesRepo) List(filter *racing.ListRacesRequestFilter, orderBy *racing.OrderBy) ([]*racing.Race, error) {
 	var (
 		err   error
 		query string
@@ -53,6 +54,15 @@ func (r *racesRepo) List(filter *racing.ListRacesRequestFilter) ([]*racing.Race,
 	query = getRaceQueries()[racesList]
 
 	query, args = r.applyFilter(query, filter)
+
+	if orderBy != nil {
+		// We only allow ordering by the following fields.
+		if orderBy.Field != "advertised_start_time" && orderBy.Field != "id" {
+			return nil, fmt.Errorf("invalid order by field: %s", orderBy.Field)
+		}
+
+		query += " ORDER BY " + orderBy.Field + " " + strings.ToUpper(orderBy.Direction)
+	}
 
 	rows, err := r.db.Query(query, args...)
 	if err != nil {
