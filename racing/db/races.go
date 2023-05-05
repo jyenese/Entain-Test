@@ -64,6 +64,7 @@ func (r *racesRepo) List(filter *racing.ListRacesRequestFilter, orderBy *racing.
 		// We only allow ordering by the following directions.
 		// We default to desc if no direction is provided.
 		// We also uppercase the direction to ensure we're consistent.
+
 		query += " ORDER BY " + orderBy.Field + " " + strings.ToUpper(orderBy.Direction)
 	}
 
