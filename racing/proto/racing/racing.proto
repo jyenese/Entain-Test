@@ -17,6 +17,7 @@ message ListRacesRequest {
   OrderBy order = 2;
 }
 
+// OrderBy represents a field and direction to order by.
 message OrderBy {
   string field = 1;
   string direction = 2;

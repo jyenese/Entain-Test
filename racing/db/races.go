@@ -61,6 +61,9 @@ func (r *racesRepo) List(filter *racing.ListRacesRequestFilter, orderBy *racing.
 			return nil, fmt.Errorf("invalid order by field: %s", orderBy.Field)
 		}
 
+		// We only allow ordering by the following directions.
+		// We default to desc if no direction is provided.
+		// We also uppercase the direction to ensure we're consistent.
 		query += " ORDER BY " + orderBy.Field + " " + strings.ToUpper(orderBy.Direction)
 	}
 
@@ -82,6 +85,7 @@ func (r *racesRepo) applyFilter(query string, filter *racing.ListRacesRequestFil
 		return query, args
 	}
 
+	// Allowing filtering by visible
 	if filter.Visible != nil {
 		clauses = append(clauses, "visible = ?")
 		args = append(args, filter.Visible)
