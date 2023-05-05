@@ -16,6 +16,7 @@ message ListRacesRequest {
   ListRacesRequestFilter filter = 1;
 }
 
+
 // Response to ListRaces call.
 message ListRacesResponse {
   repeated Race races = 1;
