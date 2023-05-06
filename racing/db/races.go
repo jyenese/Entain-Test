@@ -7,10 +7,9 @@ import (
 	"sync"
 	"time"
 
+	"git.neds.sh/matty/entain/racing/proto/racing"
 	"github.com/golang/protobuf/ptypes"
 	_ "github.com/mattn/go-sqlite3"
-
-	"git.neds.sh/matty/entain/racing/proto/racing"
 )
 
 // RacesRepo provides repository access to races.
@@ -90,7 +89,6 @@ func (r *racesRepo) applyFilter(query string, filter *racing.ListRacesRequestFil
 		clauses = append(clauses, "visible = ?")
 		args = append(args, filter.Visible)
 	}
-
 	if len(filter.MeetingIds) > 0 {
 		clauses = append(clauses, "meeting_id IN ("+strings.Repeat("?,", len(filter.MeetingIds)-1)+"?)")
 
@@ -127,7 +125,9 @@ func (m *racesRepo) scanRaces(
 		if err != nil {
 			return nil, err
 		}
-
+		// Checks the advertised start time and sets the status accordingly.
+		// "CLOSED" if the advertised start time is before now.
+		// "OPEN" if the advertised start time is after now.
 		if advertisedStart.Before(time.Now()) {
 			race.Status = "CLOSED"
 		}
