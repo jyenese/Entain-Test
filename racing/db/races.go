@@ -16,7 +16,7 @@ import (
 type RacesRepo interface {
 	// Init will initialise our races repository.
 	Init() error
-
+	Get(request *racing.GetRaceRequest) (*racing.Race, error)
 	// List will return a list of races.
 	List(filter *racing.ListRacesRequestFilter, orderBy *racing.OrderBy) ([]*racing.Race, error)
 }
@@ -74,6 +74,30 @@ func (r *racesRepo) List(filter *racing.ListRacesRequestFilter, orderBy *racing.
 	return r.scanRaces(rows)
 }
 
+func (r *racesRepo) Get(request *racing.GetRaceRequest) (*racing.Race, error) {
+	// Build the SQL query
+	query := getRaceQueries()[getRace]
+
+	// Prepare the query arguments
+	args := []interface{}{request.Id}
+
+	// Execute the query and get the results
+	rows, err := r.db.Query(query, args...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	// Parse the results and return the first race, if any
+	races, err := r.scanRaces(rows)
+	if err != nil {
+		return nil, err
+	}
+	if len(races) == 0 {
+		return nil, sql.ErrNoRows
+	}
+	return races[0], nil
+}
 func (r *racesRepo) applyFilter(query string, filter *racing.ListRacesRequestFilter) (string, []interface{}) {
 	var (
 		clauses []string
