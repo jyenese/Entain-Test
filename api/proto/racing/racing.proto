@@ -11,7 +11,12 @@ service Racing {
   rpc ListRaces(ListRacesRequest) returns (ListRacesResponse) {
     option (google.api.http) = { post: "/v1/list-races", body: "*" };
   }
+  // GetRace returns a race by ID.
+  rpc GetRace(GetRaceRequest) returns (Race) {
+    option (google.api.http) = { get: "/v1/race/{id}" };
+  }
 }
+
 
 /* Requests/Responses */
 
@@ -21,6 +26,13 @@ message ListRacesRequest {
   OrderBy order = 2;
 }
 
+// Request for GetRace call.
+message GetRaceRequest {
+  // The race id
+  int64 id = 1;
+}
+
+// OrderBy represents the order of the list.
 message OrderBy {
   string field = 1;
   string direction = 2;
