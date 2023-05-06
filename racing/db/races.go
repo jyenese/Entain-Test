@@ -64,7 +64,6 @@ func (r *racesRepo) List(filter *racing.ListRacesRequestFilter, orderBy *racing.
 		// We only allow ordering by the following directions.
 		// We default to desc if no direction is provided.
 		// We also uppercase the direction to ensure we're consistent.
-
 		query += " ORDER BY " + orderBy.Field + " " + strings.ToUpper(orderBy.Direction)
 	}
 
@@ -127,6 +126,13 @@ func (m *racesRepo) scanRaces(
 		ts, err := ptypes.TimestampProto(advertisedStart)
 		if err != nil {
 			return nil, err
+		}
+
+		if advertisedStart.Before(time.Now()) {
+			race.Status = "CLOSED"
+		}
+		if advertisedStart.After(time.Now()) {
+			race.Status = "OPEN"
 		}
 
 		race.AdvertisedStartTime = ts

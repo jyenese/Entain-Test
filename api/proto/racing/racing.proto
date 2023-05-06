@@ -26,10 +26,6 @@ message OrderBy {
   string direction = 2;
 }
 
-message RaceStatus {
-  string status = 1;
-}
-
 // Response to ListRaces call.
 message ListRacesResponse {
   repeated Race races = 1;
@@ -41,7 +37,6 @@ message ListRacesRequestFilter {
   // Filters races by whether or not they are visible.
   optional bool visible = 2;
 }
-
 /* Resources */
 
 // A race resource.
@@ -58,8 +53,6 @@ message Race {
   bool visible = 5;
   // AdvertisedStartTime is the time the race is advertised to run.
   google.protobuf.Timestamp advertised_start_time = 6;
-  // The status of the race, if it has been run or not.
-  RaceStatus status = 7;
-  
-
+  // The status/position of the race, if it has been run or not with OPEN or CLOSED.
+  string status = 7;
 }
