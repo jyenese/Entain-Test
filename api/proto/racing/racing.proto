@@ -12,6 +12,9 @@ service Racing {
     option (google.api.http) = { post: "/v1/list-races", body: "*" };
   }
 }
+service GetRace(GetRaceRequest) returns (Race) {
+  
+}
 
 /* Requests/Responses */
 
