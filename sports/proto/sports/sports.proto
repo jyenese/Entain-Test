@@ -1,5 +1,4 @@
-syntax ="proto3";
-
+syntax ="proto3"
 package sports;
 
 option go_package = "/sports";
@@ -10,11 +9,7 @@ import "google/api/annotations.proto";
 // 
 service Sports {
     // Returns a list of events
-    rpc ListEvents(ListEventsRequest) returns (ListEventsResponse) {
-        option (google.api.http) = {
-            post: "/v1/list-events"
-            body: "*"};
-    }
+    rpc ListEvents(ListEventsRequest) returns (ListEventsResponse) {}
 }
 
 /* 
