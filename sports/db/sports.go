@@ -3,10 +3,13 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"strings"
+
 	"sync"
 	"time"
 
 	"git.neds.sh/matty/entain/racing/proto/racing"
+	"github.com/golang/protobuf/ptypes"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -15,7 +18,7 @@ type SportsRepo interface {
 	// Init will initialise our sports repository.
 	Init() error
 	//List will return a list of sports.
-	List(filter *sports.ListEventsRequestFilter, orderBy *racing.OrderBy) ([]*racing.Event, error)
+	List(filter *sports.ListEventsRequestFilter, orderBy *sports.OrderBy) ([]*racing.Event, error)
 }
 
 type sportsRepo struct {
@@ -56,7 +59,11 @@ func (s *sportsRepo) List(filter *sports.ListEventsRequestFilter, orderBy *racin
 		if orderBy.Field != "advertised_start_time" && orderBy.Field != "id" {
 			return nil, fmt.Errorf("invalid order by field: %s", orderBy.Field)
 		}
-		query = fmt.Sprintf("%s ORDER BY %s %s", query, orderBy.Field, orderBy.Direction)
+
+		// We only allow ordering by the following directions.
+		// We default to desc if no direction is provided.
+		// We also uppercase the direction to ensure we're consistent.
+		query += " ORDER BY " + orderBy.Field + " " + strings.ToUpper(orderBy.Direction)
 	}
 
 	rows, err := s.db.Query(query, args...)
@@ -99,12 +106,12 @@ func (s *sportsRepo) applyFilter(query string, filter *racing.ListEventsRequestF
 func (s *sportsRepo) scanEvents(rows *sql.Rows) ([]*racing.Event, error) {
 	var (
 		err    error
-		events []*racing.Event
+		events []*sports.Event
 	)
 
 	for rows.Next() {
 		var (
-			event sports.Event
+			event *sports.Event
 			start time.Time
 		)
 
