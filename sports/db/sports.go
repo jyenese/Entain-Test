@@ -3,12 +3,11 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"sports/proto/sports"
 	"strings"
-
 	"sync"
 	"time"
 
-	"git.neds.sh/matty/entain/racing/proto/racing"
 	"github.com/golang/protobuf/ptypes"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -18,7 +17,7 @@ type SportsRepo interface {
 	// Init will initialise our sports repository.
 	Init() error
 	//List will return a list of sports.
-	List(filter *sports.ListEventsRequestFilter, orderBy *sports.OrderBy) ([]*racing.Event, error)
+	List(filter *sports.ListEventsRequestFilter, orderBy *sports.OrderBy) ([]*sports.Event, error)
 }
 
 type sportsRepo struct {
@@ -43,7 +42,7 @@ func (s *sportsRepo) Init() error {
 	return err
 }
 
-func (s *sportsRepo) List(filter *sports.ListEventsRequestFilter, orderBy *racing.OrderBy) ([]*racing.Event, error) {
+func (s *sportsRepo) List(filter *sports.ListEventsRequestFilter, orderBy *sports.OrderBy) ([]*sports.Event, error) {
 	var (
 		err   error
 		query string
@@ -74,7 +73,7 @@ func (s *sportsRepo) List(filter *sports.ListEventsRequestFilter, orderBy *racin
 	return s.scanEvents(rows)
 }
 
-func (s *sportsRepo) applyFilter(query string, filter *racing.ListEventsRequestFilter) (string, []interface{}) {
+func (s *sportsRepo) applyFilter(query string, filter *sports.ListEventsRequestFilter) (string, []interface{}) {
 	var (
 		clauses []string
 		args    []interface{}
@@ -103,7 +102,7 @@ func (s *sportsRepo) applyFilter(query string, filter *racing.ListEventsRequestF
 	return query, args
 }
 
-func (s *sportsRepo) scanEvents(rows *sql.Rows) ([]*racing.Event, error) {
+func (s *sportsRepo) scanEvents(rows *sql.Rows) ([]*sports.Event, error) {
 	var (
 		err    error
 		events []*sports.Event
@@ -111,20 +110,25 @@ func (s *sportsRepo) scanEvents(rows *sql.Rows) ([]*racing.Event, error) {
 
 	for rows.Next() {
 		var (
-			event *sports.Event
-			start time.Time
+			id                     int64
+			name, category, mascot string
+			advertisedStartTime    time.Time
 		)
 
-		if err = rows.Scan(&event.Id, &event.Name, &event.Category, &event.Mascot, &start); err != nil {
-			return nil, err
-		}
-
-		event.AdvertisedStartTime, err = ptypes.TimestampProto(start)
+		err = rows.Scan(&id, &name, &category, &mascot, &advertisedStartTime)
 		if err != nil {
 			return nil, err
 		}
 
-		events = append(events, &event)
+		event := &sports.Event{
+			Id:        id,
+			Name:      name,
+			Category:  category,
+			Mascot:    mascot,
+			StartTime: ptypes.TimestampNow(),
+		}
+
+		events = append(events, event)
 	}
 
 	return events, nil

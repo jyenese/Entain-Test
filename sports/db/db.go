@@ -7,7 +7,7 @@ import (
 )
 
 func (s *sportsRepo) seed() error {
-	statement, err := s.db.Prepare(`CREATE TABLE IF NOT EXISTS races (id INTEGER PRIMARY KEY, name TEXT, category TEXT, mascot TEXT, advertised_start_time DATETIME)`)
+	statement, err := s.db.Prepare(`CREATE TABLE IF NOT EXISTS events (id INTEGER PRIMARY KEY, name TEXT, category TEXT, mascot TEXT, advertised_start_time DATETIME)`)
 	if err == nil {
 		_, err = statement.Exec()
 	}

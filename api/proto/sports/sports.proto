@@ -39,8 +39,10 @@ message ListEventsResponse {
 // Filter for ListEvents
 message ListEventsRequestFilter {
     repeated int64 id = 1;
-    optional string category = 2;
-    optional string mascot = 3;
+    optional string name = 2;
+    optional string category = 3;
+    optional string mascot = 4;
+    optional string start_time = 5;
 }
 
 /* Resources */
@@ -48,11 +50,13 @@ message ListEventsRequestFilter {
 message Event {
     // Unique identifier for the event
     int64 id = 1;
+    // Name of the event
+    string name = 2;
     // Category of the event
-    string category = 2;
+    string category = 3;
     // Mascot of the event
-    string mascot = 3;
+    string mascot = 4;
     // Start time of the event
-    google.protobuf.Timestamp start_time = 4;
+    google.protobuf.Timestamp start_time = 5;
 }
 

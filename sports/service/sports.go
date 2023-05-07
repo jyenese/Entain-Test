@@ -2,9 +2,9 @@ package service
 
 import (
 	"errors"
+	"sports/db"
+	"sports/proto/sports"
 
-	"git.neds.sh/matty/entain/racing/db"
-	"git.neds.sh/matty/entain/racing/proto/racing"
 	"golang.org/x/net/context"
 )
 
@@ -19,7 +19,7 @@ type sportsService struct {
 }
 
 // newSportService instantiates and returns a new sportService.
-func newSportService(sportsRepo db.SportsRepo) Sports {
+func NewSportsService(sportsRepo db.SportsRepo) Sports {
 	return &sportsService{sportsRepo}
 }
 
@@ -39,10 +39,10 @@ func (s *sportsService) ListEvents(ctx context.Context, in *sports.ListEventsReq
 		}
 	}
 
-	races, err := s.sportsRepo.List(in.Filter, in.Order)
+	events, err := s.sportsRepo.List(in.Filter, in.Order)
 	if err != nil {
 		return nil, err
 	}
 
-	return &racing.ListRacesResponse{Races: races}, nil
+	return &sports.ListEventsResponse{Events: events}, nil
 }
