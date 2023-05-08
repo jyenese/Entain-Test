@@ -21,7 +21,7 @@ func (r *racesRepo) seed() error {
 				faker.Team().Name(),
 				faker.Number().Between(1, 12),
 				faker.Number().Between(0, 1),
-				faker.Time().Between(time.Now().AddDate(0, 0, -1), time.Now().AddDate(0, 0, 2)).Format(time.RFC3339),
+				faker.Time().Between(time.Now().AddDate(0, 0, -1), time.Now().AddDate(0, 0, 9)).Format(time.RFC3339),
 			)
 		}
 	}

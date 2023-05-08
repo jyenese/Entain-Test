@@ -130,8 +130,7 @@ func (r *racesRepo) applyFilter(query string, filter *racing.ListRacesRequestFil
 }
 
 func (m *racesRepo) scanRaces(
-	rows *sql.Rows,
-) ([]*racing.Race, error) {
+	rows *sql.Rows) ([]*racing.Race, error) {
 	var races []*racing.Race
 
 	for rows.Next() {
