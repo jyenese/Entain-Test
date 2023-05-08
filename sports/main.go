@@ -5,27 +5,28 @@ import (
 	"flag"
 	"log"
 	"net"
-	"sports/db"
-	"sports/proto/sports"
-	"sports/service"
+
+	"git.neds.sh/matty/entain/sports/db"
+	"git.neds.sh/matty/entain/sports/proto/sports"
+	"git.neds.sh/matty/entain/sports/service"
 
 	"google.golang.org/grpc"
 )
 
 var (
-	grpcEndpoint = flag.String("grpc-endpoint", "localhost:1000", "gRPC server endpoint")
+	grpcEndpoint = flag.String("grpc-endpoint", "localhost:9001", "gRPC server endpoint")
 )
 
 func main() {
 	flag.Parse()
 
 	if err := run(); err != nil {
-		log.Fatalf("failed running grpc server: %s\n", err)
+		log.Fatalf("failed running grpc server: %s", err)
 	}
 }
 
 func run() error {
-	conn, err := net.Listen("tcp", ":9000")
+	conn, err := net.Listen("tcp", ":9001")
 	if err != nil {
 		return err
 	}
@@ -34,7 +35,6 @@ func run() error {
 	if err != nil {
 		return err
 	}
-
 	sportsRepo := db.NewSportsRepo(sportsDB)
 	if err := sportsRepo.Init(); err != nil {
 		return err

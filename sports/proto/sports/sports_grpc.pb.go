@@ -48,22 +48,20 @@ func (c *sportsClient) ListEvents(ctx context.Context, in *ListEventsRequest, op
 }
 
 // SportsServer is the server API for Sports service.
-// All implementations must embed UnimplementedSportsServer
+// All implementations should embed UnimplementedSportsServer
 // for forward compatibility
 type SportsServer interface {
 	// Returns a list of events
 	ListEvents(context.Context, *ListEventsRequest) (*ListEventsResponse, error)
-	mustEmbedUnimplementedSportsServer()
 }
 
-// UnimplementedSportsServer must be embedded to have forward compatible implementations.
+// UnimplementedSportsServer should be embedded to have forward compatible implementations.
 type UnimplementedSportsServer struct {
 }
 
 func (UnimplementedSportsServer) ListEvents(context.Context, *ListEventsRequest) (*ListEventsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListEvents not implemented")
 }
-func (UnimplementedSportsServer) mustEmbedUnimplementedSportsServer() {}
 
 // UnsafeSportsServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to SportsServer will

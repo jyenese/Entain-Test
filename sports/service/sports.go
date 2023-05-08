@@ -2,8 +2,9 @@ package service
 
 import (
 	"errors"
-	"sports/db"
-	"sports/proto/sports"
+
+	"git.neds.sh/matty/entain/sports/db"
+	"git.neds.sh/matty/entain/sports/proto/sports"
 
 	"golang.org/x/net/context"
 )

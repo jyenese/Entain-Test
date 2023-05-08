@@ -3,10 +3,11 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"sports/proto/sports"
 	"strings"
 	"sync"
 	"time"
+
+	"git.neds.sh/matty/entain/sports/proto/sports"
 
 	"github.com/golang/protobuf/ptypes"
 	_ "github.com/mattn/go-sqlite3"
@@ -20,6 +21,7 @@ type SportsRepo interface {
 	List(filter *sports.ListEventsRequestFilter, orderBy *sports.OrderBy) ([]*sports.Event, error)
 }
 
+// sportsRepo is a repository for sports.
 type sportsRepo struct {
 	db   *sql.DB
 	init sync.Once
@@ -42,6 +44,7 @@ func (s *sportsRepo) Init() error {
 	return err
 }
 
+// List will return a list of sports.
 func (s *sportsRepo) List(filter *sports.ListEventsRequestFilter, orderBy *sports.OrderBy) ([]*sports.Event, error) {
 	var (
 		err   error
@@ -73,6 +76,7 @@ func (s *sportsRepo) List(filter *sports.ListEventsRequestFilter, orderBy *sport
 	return s.scanEvents(rows)
 }
 
+// applyFilter will apply the provided filter to the query.
 func (s *sportsRepo) applyFilter(query string, filter *sports.ListEventsRequestFilter) (string, []interface{}) {
 	var (
 		clauses []string
@@ -102,6 +106,7 @@ func (s *sportsRepo) applyFilter(query string, filter *sports.ListEventsRequestF
 	return query, args
 }
 
+// scanEvents will scan the provided rows and return a list of events.
 func (s *sportsRepo) scanEvents(rows *sql.Rows) ([]*sports.Event, error) {
 	var (
 		err    error

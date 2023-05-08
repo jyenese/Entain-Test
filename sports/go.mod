@@ -1,4 +1,4 @@
-module sports
+module git.neds.sh/matty/entain/sports
 
 go 1.16
 

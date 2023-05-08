@@ -6,6 +6,7 @@ import (
 	"syreclabs.com/go/faker"
 )
 
+// Seeds the database with 100 events
 func (s *sportsRepo) seed() error {
 	statement, err := s.db.Prepare(`CREATE TABLE IF NOT EXISTS events (id INTEGER PRIMARY KEY, name TEXT, category TEXT, mascot TEXT, advertised_start_time DATETIME)`)
 	if err == nil {
@@ -13,7 +14,7 @@ func (s *sportsRepo) seed() error {
 	}
 
 	for i := 1; i <= 100; i++ {
-		statement, err = s.db.Prepare(`INSERT OR IGNORE INTO events(id, name, category, mascot, advertised_start_time) VALUES (?,?,?,?)`)
+		statement, err = s.db.Prepare(`INSERT OR IGNORE INTO events(id, name, category, mascot, advertised_start_time) VALUES (?,?,?,?,?)`)
 		if err == nil {
 			_, err = statement.Exec(
 				i,
@@ -28,6 +29,7 @@ func (s *sportsRepo) seed() error {
 	return err
 }
 
+// Returns a list of categories of sport
 func category() []string {
 	return []string{
 		"Tennis",
@@ -59,6 +61,7 @@ func category() []string {
 	}
 }
 
+// Returns a list of mascots for the sports
 func mascot() []string {
 	return []string{
 		"GOBBLEDOK",
